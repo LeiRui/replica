@@ -16,16 +16,16 @@ import java.util.List;
 
 
 public class InsertData {
-    private static String ks = "replica";
+    private static String ks = "replica2";
     private static String nodes = "127.0.0.1";
-    private static String outFile = "src/main/resources/out";
-    private static int range = 1000;
-    private static int lines = 500000;
+    //private static String outFile = "src/main/resources/out";
+    //private static int range = 1000;
+    //private static int lines = 500000;
 
     public static void main( String[] args ) throws Exception {
-        String cf = "data";
+        String cf = "data2";
         String createCf = "CREATE TABLE IF NOT EXISTS " + ks + "." + cf + " (" + "c1 int," + "c2 int,"
-                + "c3 int, c4 int, c5 int, " + "PRIMARY KEY(c1,c2,c3)" + ");";
+                + "c3 int, c4 int, c5 int, " + "PRIMARY KEY(c1,c2,c3,c4)" + ");";
 
         CassandraCluster cluster = CassandraCluster.getInstance(nodes);
         cluster.dropKeyspace(ks);
@@ -35,7 +35,16 @@ public class InsertData {
 
         Random random = new Random(10);
         System.out.println("write");
-        int i = 0;
+        for(int i = 1; i<=100; i ++ )
+            for(int j = 1; j <= 100; j ++)
+                for(int k = 1; k <=100; k++){
+                    Statement statement = QueryBuilder.insertInto(ks, cf).value("c1", 1).
+                            value("c2", i).value("c3",j).value("c4", k).value("c5",
+                            random.nextInt(100));
+                    session.execute(statement);
+                }
+        //int i = 0;
+        /*
         while (i < lines) {
             int c1 = 1;
             int c2 = random.nextInt(range);
@@ -49,7 +58,8 @@ public class InsertData {
             if (i % 10000 == 0) {
                 System.out.println("write: " + i / 10000 + "万");
             }
-        }
+        }*/
+
         cluster.close();
     }
 }

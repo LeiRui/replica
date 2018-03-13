@@ -74,7 +74,7 @@ public class CassandraCluster {
         }
         cluster = Cluster.builder().addContactPoints(addresses)
                 //集群需要用户名密码
-                //.withCredentials("cassandra", "123456")
+                //.withCredentials("publiccluster", "pubclu_clu")
                 .build();
         logger.info("Try connectCluster cassandra");
         try {
